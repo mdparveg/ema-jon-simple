@@ -1,0 +1,11 @@
+.twin-container{
+    display: flex;
+ 
+}
+.product-container{
+    float: left;
+    width: 70%;
+    margin-left: 20px;
+    margin-right: 5px;
+    border-right: 2px solid lightgray;
+}
