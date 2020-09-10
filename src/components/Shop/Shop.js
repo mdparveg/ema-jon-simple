@@ -63,9 +63,6 @@ const Shop = () => {
                     </Link>
                 </Cart>
             </div>
-                <Router>
-                    
-                </Router>
         </div>
     );
 };
