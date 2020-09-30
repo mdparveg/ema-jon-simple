@@ -1,19 +1,17 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { getDatabaseCart, removeFromDatabaseCart, processOrder } from '../../utilities/databaseManager';
-import fakeData from '../../fakeData';
 import ReviewItem from '../ReviewItem/ReviewItem';
 import Cart from '../../components/Cart/Cart';
 import happyImage from '../../images/giphy.gif'
+import { useHistory } from 'react-router-dom';
 
 const Review = () => {
     const [cart, setCart] = useState([]);
     const [orderPlaced, setOrderPlaced] = useState(false)
-
-    const handlePlaceOrder = () => {
-        setCart([]);
-        setOrderPlaced(true);
-        processOrder();
+    const history = useHistory()
+    const handleProceedCheckout = () => {
+       history.push('/shipment')
     }
 
     const removeProduct = (productKey) => {
@@ -23,13 +21,23 @@ const Review = () => {
     }
     useEffect(() => {
         const savedCart = getDatabaseCart();
-        const productkeys = Object.keys(savedCart)
-        const cartProducts = productkeys.map(key => {
-            const product = fakeData.find(pd => pd.key === key);
-            product.quantity = savedCart[key];
-            return product;
+        const productKeys = Object.keys(savedCart)
+
+        fetch('http://localhost:5000/productsByKeys', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productKeys)
         })
-        setCart(cartProducts);
+        .then(res => res.json())
+        .then(data => setCart(data))
+        // const cartProducts = productkeys.map(key => {
+        //     const product = fakeData.find(pd => pd.key === key);
+        //     product.quantity = savedCart[key];
+        //     return product;
+        // })
+        // setCart(cartProducts);
     }, []);
 
     let thankYou;
@@ -50,7 +58,7 @@ const Review = () => {
             </div>
             <div className="cart-container">
             <Cart cart={cart}>
-                <button onClick={handlePlaceOrder} className="main-button">Place Order</button>
+                <button onClick={handleProceedCheckout} className="main-button">Proceed Checkout</button>
             </Cart>
             </div>
         </div>
